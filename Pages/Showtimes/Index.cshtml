@@ -1,0 +1,48 @@
+﻿@page
+@model CinemaAplicatieWEB.Pages.Showtimes.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Showtime[0].DateTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Showtime[0].Movie)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Showtime[0].Hall)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Showtime) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Movie.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Hall.Id)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

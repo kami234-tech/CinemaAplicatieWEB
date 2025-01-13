@@ -1,0 +1,44 @@
+﻿@page
+@model CinemaAplicatieWEB.Pages.RegisterModel
+@{
+    ViewData["Title"] = "Register";
+}
+<h1>Register</h1>
+<form method="post">
+    <div>
+        <label>Email:</label>
+        <input asp-for="Email" />
+    </div>
+    <div>
+        <label>Password:</label>
+        <input asp-for="Password" type="password" />
+    </div>
+    <div>
+        <label>Role:</label>
+        <select asp-for="Role" id="Role" onchange="toggleSecretField()" required>
+            <option value="">Select role</option>
+            <option value="user">User</option>
+            <option value="admin">Admin</option>
+        </select>
+    </div>
+    <div id="SecretField" style="display:none;">
+        <label>Secret Password:</label>
+        <input id="SecretPassword" name="SecretPassword" type="password" />
+    </div>
+    <button type="submit">Register</button>
+    <p style="color:red;">@Model.ErrorMessage</p>
+</form>
+
+@section Scripts {
+    <script>
+        function toggleSecretField() {
+            const role = document.getElementById("Role").value;
+            const secretField = document.getElementById("SecretField");
+            if (role === "admin") {
+                secretField.style.display = "block";
+            } else {
+                secretField.style.display = "none";
+            }
+        }
+    </script>
+}

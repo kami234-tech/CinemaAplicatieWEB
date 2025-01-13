@@ -1,0 +1,87 @@
+﻿@page
+@model CinemaAplicatieWEB.Pages.Users.CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create User</h1>
+
+<h4>User</h4>
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="User.Name" class="control-label"></label>
+                <input asp-for="User.Name" class="form-control" />
+                <span asp-validation-for="User.Name" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="User.Email" class="control-label"></label>
+                <input asp-for="User.Email" class="form-control" type="email" />
+                <span asp-validation-for="User.Email" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="User.Password" class="control-label"></label>
+                <input asp-for="User.Password" class="form-control" type="password" />
+                <span asp-validation-for="User.Password" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="User.Role" class="control-label"></label>
+                <select asp-for="User.Role" class="form-control" id="RoleSelect">
+                    <option value="user">User</option>
+                    <option value="admin">Admin</option>
+                </select>
+                <span asp-validation-for="User.Role" class="text-danger"></span>
+            </div>
+
+            <!-- Admin password field (hidden by default) -->
+            <div class="form-group" id="AdminPasswordSection" style="display: none;">
+                <label for="AdminPassword" class="control-label">Admin Password</label>
+                <input id="AdminPassword" class="form-control" type="password" />
+                <span id="AdminPasswordError" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+    <script>
+        // Show/hide the admin password field based on the selected role
+        document.getElementById("RoleSelect").addEventListener("change", function () {
+            var adminPasswordSection = document.getElementById("AdminPasswordSection");
+            if (this.value === "admin") {
+                adminPasswordSection.style.display = "block";
+            } else {
+                adminPasswordSection.style.display = "none";
+            }
+        });
+
+        // Validate admin password on form submission
+        document.querySelector("form").addEventListener("submit", function (e) {
+            var selectedRole = document.getElementById("RoleSelect").value;
+            if (selectedRole === "admin") {
+                var adminPassword = document.getElementById("AdminPassword").value;
+                if (adminPassword !== "CinemaCity") {
+                    e.preventDefault();
+                    document.getElementById("AdminPasswordError").textContent = "Incorrect admin password!";
+                }
+            }
+        });
+    </script>
+}
