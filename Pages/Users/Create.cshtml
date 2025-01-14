@@ -1,87 +1,73 @@
 ﻿@page
 @model CinemaAplicatieWEB.Pages.Users.CreateModel
-
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Create User";
 }
 
 <h1>Create User</h1>
 
-<h4>User</h4>
-<hr />
-<div class="row">
-    <div class="col-md-6">
-        <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-            <div class="form-group">
-                <label asp-for="User.Name" class="control-label"></label>
-                <input asp-for="User.Name" class="form-control" />
-                <span asp-validation-for="User.Name" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="User.Email" class="control-label"></label>
-                <input asp-for="User.Email" class="form-control" type="email" />
-                <span asp-validation-for="User.Email" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="User.Password" class="control-label"></label>
-                <input asp-for="User.Password" class="form-control" type="password" />
-                <span asp-validation-for="User.Password" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="User.Role" class="control-label"></label>
-                <select asp-for="User.Role" class="form-control" id="RoleSelect">
-                    <option value="user">User</option>
-                    <option value="admin">Admin</option>
-                </select>
-                <span asp-validation-for="User.Role" class="text-danger"></span>
-            </div>
-
-            <!-- Admin password field (hidden by default) -->
-            <div class="form-group" id="AdminPasswordSection" style="display: none;">
-                <label for="AdminPassword" class="control-label">Admin Password</label>
-                <input id="AdminPassword" class="form-control" type="password" />
-                <span id="AdminPasswordError" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+<form method="post">
+    <div class="form-group">
+        <label asp-for="User.Name" class="control-label"></label>
+        <input asp-for="User.Name" class="form-control" />
+        <span asp-validation-for="User.Name" class="text-danger"></span>
     </div>
-</div>
 
-<div>
-    <a asp-page="Index">Back to List</a>
-</div>
+    <div class="form-group">
+        <label asp-for="User.Email" class="control-label"></label>
+        <input asp-for="User.Email" class="form-control" />
+        <span asp-validation-for="User.Email" class="text-danger"></span>
+    </div>
+
+    <!-- Role Dropdown -->
+    <div class="form-group">
+        <label asp-for="User.Role" class="control-label"></label>
+        <select asp-for="User.Role" class="form-control" id="Role">
+            <option value="user">User</option>
+            <option value="admin">Admin</option>
+        </select>
+        <span asp-validation-for="User.Role" class="text-danger"></span>
+    </div>
+
+    <!-- Password Field for User -->
+    <div class="form-group">
+        <label asp-for="User.Password" class="control-label"></label>
+        <input asp-for="User.Password" class="form-control" type="password" />
+        <span asp-validation-for="User.Password" class="text-danger"></span>
+    </div>
+
+    <!-- Secret Password Field for Admin -->
+    <div class="form-group" id="AdminSecretDiv" style="display:none;">
+        <label class="control-label">Admin Secret Password</label>
+        <input type="text" class="form-control" id="AdminSecret" name="AdminSecret" />
+        <span class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <input type="submit" value="Create User" class="btn btn-primary" />
+    </div>
+</form>
+
+<a asp-page="./Index" class="btn btn-secondary">Back to List</a>
 
 @section Scripts {
-    @await Html.PartialAsync("_ValidationScriptsPartial")
-    <script>
-        // Show/hide the admin password field based on the selected role
-        document.getElementById("RoleSelect").addEventListener("change", function () {
-            var adminPasswordSection = document.getElementById("AdminPasswordSection");
-            if (this.value === "admin") {
-                adminPasswordSection.style.display = "block";
-            } else {
-                adminPasswordSection.style.display = "none";
-            }
-        });
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://ajax.microsoft.com/ajax/jquery.validate/1.19.2/jquery.validate.min.js"></script>
+    <script src="https://ajax.microsoft.com/ajax/jquery.validate.unobtrusive/3.2.11/jquery.validate.unobtrusive.min.js"></script>
 
-        // Validate admin password on form submission
-        document.querySelector("form").addEventListener("submit", function (e) {
-            var selectedRole = document.getElementById("RoleSelect").value;
-            if (selectedRole === "admin") {
-                var adminPassword = document.getElementById("AdminPassword").value;
-                if (adminPassword !== "CinemaCity") {
-                    e.preventDefault();
-                    document.getElementById("AdminPasswordError").textContent = "Incorrect admin password!";
+    <script>
+        // Show the secret password field when the "Admin" role is selected
+        $(document).ready(function () {
+            $('#Role').change(function () {
+                var selectedRole = $(this).val();
+                if (selectedRole === 'admin') {
+                    $('#AdminSecretDiv').show(); // Show the secret password field for Admin
+                    $('#AdminSecret').prop('required', true); // Make sure it's required for admins
+                } else {
+                    $('#AdminSecretDiv').hide(); // Hide the secret password field for non-admin
+                    $('#AdminSecret').prop('required', false); // Remove the required attribute for non-admin
                 }
-            }
+            });
         });
     </script>
 }

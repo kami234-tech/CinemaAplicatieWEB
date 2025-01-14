@@ -1,42 +1,51 @@
 ﻿@page
 @model CinemaAplicatieWEB.Pages.Showtimes.CreateModel
-
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Create Showtime";
 }
 
-<h1>Create</h1>
+<h1>Create Showtime</h1>
 
-<h4>Showtime</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Showtime.MovieId" class="control-label"></label>
-                <select asp-for="Showtime.MovieId" class ="form-control" asp-items="ViewBag.MovieId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Showtime.DateTime" class="control-label"></label>
-                <input asp-for="Showtime.DateTime" class="form-control" />
-                <span asp-validation-for="Showtime.DateTime" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Showtime.HallId" class="control-label"></label>
-                <select asp-for="Showtime.HallId" class ="form-control" asp-items="ViewBag.HallId"></select>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+<form method="post">
+    <!-- Movie Selection -->
+    <div class="form-group">
+        <label for="MovieId">Movie</label>
+        <select asp-for="Showtime.MovieId" class="form-control" asp-items="@(new SelectList(Model.Movies, "Id", "Title"))" required>
+            <option value="">-- Select a Movie --</option>
+        </select>
+        <span asp-validation-for="Showtime.MovieId" class="text-danger"></span>
     </div>
-</div>
 
-<div>
-    <a asp-page="Index">Back to List</a>
-</div>
+    <!-- Hall Selection -->
+    <div class="form-group">
+        <label for="HallId">Hall</label>
+        <select asp-for="Showtime.HallId" class="form-control" asp-items="@(new SelectList(Model.Halls, "Id", "Name"))" required>
+            <option value="">-- Select a Hall --</option>
+        </select>
+        <span asp-validation-for="Showtime.HallId" class="text-danger"></span>
+    </div>
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+    <div class="form-group">
+        <label for="DateTime">Date</label>
+        <!-- Use date input to handle only the date part -->
+        <input asp-for="Showtime.DateTime" class="form-control" type="date" value="@Model.Showtime.DateTime?.ToString("yyyy-MM-dd")" required />
+        <span asp-validation-for="Showtime.DateTime" class="text-danger"></span>
+    </div>
+
+
+    <!-- Showtime Selection -->
+    <div class="form-group">
+        <label for="Time">Select Showtime:</label>
+        <select asp-for="Showtime.Time" class="form-control" required>
+            <option value="">-- Select Showtime --</option>
+            @foreach (var time in ViewData["TimeSlots"] as List<SelectListItem>)
+            {
+                <option value="@time.Value">@time.Text</option>
+            }
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Create Showtime</button>
+</form>
+
+<a asp-page="./Index" class="btn btn-secondary">Back to List</a>

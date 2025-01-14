@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using CinemaAplicatieWEB.Data;
@@ -19,11 +18,12 @@ namespace CinemaAplicatieWEB.Pages.Users
             _context = context;
         }
 
-        public IList<User> User { get;set; } = default!;
+        public IList<User> Users { get; set; } = default!;
 
         public async Task OnGetAsync()
         {
-            User = await _context.User.ToListAsync();
+            // Replace _context.User with _context.Users
+            Users = await _context.Users.ToListAsync();
         }
     }
 }

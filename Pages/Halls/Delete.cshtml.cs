@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -12,9 +9,9 @@ namespace CinemaAplicatieWEB.Pages.Halls
 {
     public class DeleteModel : PageModel
     {
-        private readonly CinemaAplicatieWEB.Data.CinemaAplicatieWEBContext _context;
+        private readonly CinemaAplicatieWEBContext _context;
 
-        public DeleteModel(CinemaAplicatieWEB.Data.CinemaAplicatieWEBContext context)
+        public DeleteModel(CinemaAplicatieWEBContext context)
         {
             _context = context;
         }
@@ -29,18 +26,17 @@ namespace CinemaAplicatieWEB.Pages.Halls
                 return NotFound();
             }
 
-            var hall = await _context.Hall.FirstOrDefaultAsync(m => m.Id == id);
+            // Retrieve the hall to confirm deletion
+            Hall = await _context.Halls.FirstOrDefaultAsync(h => h.Id == id);
 
-            if (hall == null)
+            if (Hall == null)
             {
                 return NotFound();
             }
-            else
-            {
-                Hall = hall;
-            }
+
             return Page();
         }
+
 
         public async Task<IActionResult> OnPostAsync(int? id)
         {
@@ -49,11 +45,11 @@ namespace CinemaAplicatieWEB.Pages.Halls
                 return NotFound();
             }
 
-            var hall = await _context.Hall.FindAsync(id);
-            if (hall != null)
+            Hall = await _context.Halls.FindAsync(id);
+
+            if (Hall != null)
             {
-                Hall = hall;
-                _context.Hall.Remove(Hall);
+                _context.Halls.Remove(Hall);
                 await _context.SaveChangesAsync();
             }
 

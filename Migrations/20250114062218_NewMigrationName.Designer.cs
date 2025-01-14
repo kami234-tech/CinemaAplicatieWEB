@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CinemaAplicatieWEB.Migrations
 {
     [DbContext(typeof(CinemaAplicatieWEBContext))]
-    [Migration("20250111210354_AddGenresToMovies")]
-    partial class AddGenresToMovies
+    [Migration("20250114062218_NewMigrationName")]
+    partial class NewMigrationName
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -46,35 +46,7 @@ namespace CinemaAplicatieWEB.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Hall");
-                });
-
-            modelBuilder.Entity("CinemaAplicatieWEB.Models.Movie", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Duration")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Genres")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Movie");
+                    b.ToTable("Halls", (string)null);
                 });
 
             modelBuilder.Entity("CinemaAplicatieWEB.Models.Reservation", b =>
@@ -104,7 +76,7 @@ namespace CinemaAplicatieWEB.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Reservation");
+                    b.ToTable("Reservation", (string)null);
                 });
 
             modelBuilder.Entity("CinemaAplicatieWEB.Models.Showtime", b =>
@@ -124,13 +96,17 @@ namespace CinemaAplicatieWEB.Migrations
                     b.Property<int>("MovieId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Time")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("HallId");
 
                     b.HasIndex("MovieId");
 
-                    b.ToTable("Showtime");
+                    b.ToTable("Showtime", (string)null);
                 });
 
             modelBuilder.Entity("CinemaAplicatieWEB.Models.User", b =>
@@ -159,13 +135,41 @@ namespace CinemaAplicatieWEB.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("User");
+                    b.ToTable("Users", (string)null);
+                });
+
+            modelBuilder.Entity("Movie", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Duration")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Genres")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Movies", (string)null);
                 });
 
             modelBuilder.Entity("CinemaAplicatieWEB.Models.Reservation", b =>
                 {
                     b.HasOne("CinemaAplicatieWEB.Models.Showtime", "Showtime")
-                        .WithMany()
+                        .WithMany("Reservations")
                         .HasForeignKey("ShowtimeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -189,8 +193,8 @@ namespace CinemaAplicatieWEB.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CinemaAplicatieWEB.Models.Movie", "Movie")
-                        .WithMany()
+                    b.HasOne("Movie", "Movie")
+                        .WithMany("Showtimes")
                         .HasForeignKey("MovieId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -198,6 +202,16 @@ namespace CinemaAplicatieWEB.Migrations
                     b.Navigation("Hall");
 
                     b.Navigation("Movie");
+                });
+
+            modelBuilder.Entity("CinemaAplicatieWEB.Models.Showtime", b =>
+                {
+                    b.Navigation("Reservations");
+                });
+
+            modelBuilder.Entity("Movie", b =>
+                {
+                    b.Navigation("Showtimes");
                 });
 #pragma warning restore 612, 618
         }

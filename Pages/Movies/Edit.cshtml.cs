@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CinemaAplicatieWEB.Data;
 using CinemaAplicatieWEB.Models;
@@ -13,9 +9,9 @@ namespace CinemaAplicatieWEB.Pages.Movies
 {
     public class EditModel : PageModel
     {
-        private readonly CinemaAplicatieWEB.Data.CinemaAplicatieWEBContext _context;
+        private readonly CinemaAplicatieWEBContext _context;
 
-        public EditModel(CinemaAplicatieWEB.Data.CinemaAplicatieWEBContext context)
+        public EditModel(CinemaAplicatieWEBContext context)
         {
             _context = context;
         }
@@ -30,44 +26,47 @@ namespace CinemaAplicatieWEB.Pages.Movies
                 return NotFound();
             }
 
-            var movie =  await _context.Movie.FirstOrDefaultAsync(m => m.Id == id);
-            if (movie == null)
+            Movie = await _context.Movies.FirstOrDefaultAsync(m => m.Id == id);
+
+            if (Movie == null)
             {
                 return NotFound();
             }
-            Movie = movie;
+
             return Page();
         }
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more information, see https://aka.ms/RazorPagesCRUD.
-        public async Task<IActionResult> OnPostAsync(int id)
+        public async Task<IActionResult> OnPostAsync()
         {
-            var movieToUpdate = await _context.Movie.FindAsync(id);
-
-            if (movieToUpdate == null)
+            if (!ModelState.IsValid)
             {
-                return NotFound();
+                return Page();
             }
 
-            if (await TryUpdateModelAsync<Movie>(
-                movieToUpdate,
-                "movie",
-                m => m.Title, m => m.Description, m => m.Duration))
+            try
             {
-                // Obține genurile selectate din formular
-                movieToUpdate.Genres = Request.Form["Genres"].ToString().Split(',').ToList();
-
+                // Attach the existing entity and set its state to Modified
+                _context.Attach(Movie).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
-                return RedirectToPage("./Index");
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!MovieExists(Movie.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
             }
 
-            return Page();
+            return RedirectToPage("./Index");
         }
 
         private bool MovieExists(int id)
         {
-            return _context.Movie.Any(e => e.Id == id);
+            return _context.Movies.Any(e => e.Id == id);
         }
     }
 }

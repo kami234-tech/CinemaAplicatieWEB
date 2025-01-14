@@ -2,52 +2,50 @@
 @model CinemaAplicatieWEB.Pages.Movies.IndexModel
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Movies";
 }
 
-<h1>Index</h1>
+<h1>Movies</h1>
 
-<p>
-    <a asp-page="Create">Create New</a>
-</p>
+<!-- Check if the user is an admin -->
+@if (User.IsInRole("admin"))
+{
+    <p>
+        <a asp-page="./Create" class="btn btn-primary">Create New Movie</a>
+    </p>
+}
+
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Movie[0].Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Movie[0].Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Movie[0].Duration)
-            </th>
-            <th>
-                Genres
-            </th>
-            <th></th>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Duration</th>
+            <th>Genres</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.Movie)
+        @foreach (var movie in Model.Movie)
         {
             <tr>
+                <td>@movie.Title</td>
+                <td>@movie.Description</td>
+                <td>@movie.Duration minutes</td>
+                <td>@string.Join(", ", movie.Genres)</td>  <!-- Make sure you join genres if it's a list -->
                 <td>
-                    @Html.DisplayFor(modelItem => item.Title)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Description)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Duration)
-                </td>
-                <td>
-                    @string.Join(", ", item.Genres) <!-- Afișează genurile ca un șir delimitat -->
-                </td>
-                <td>
-                    <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+                    <!-- Check if the user is an admin before showing these buttons -->
+                    @if (User.IsInRole("admin"))
+                    {
+                        <a asp-page="./Details" asp-route-id="@movie.Id" class="btn btn-info btn-sm">Details</a>
+                        <a asp-page="./Edit" asp-route-id="@movie.Id" class="btn btn-warning btn-sm">Edit</a>
+                        <a asp-page="./Delete" asp-route-id="@movie.Id" class="btn btn-danger btn-sm">Delete</a>
+                    }
+                    else
+                    {
+                        <!-- Optionally, you could show different content for non-admin users, like viewing details -->
+                        <a asp-page="./Details" asp-route-id="@movie.Id" class="btn btn-info btn-sm">Details</a>
+                    }
                 </td>
             </tr>
         }

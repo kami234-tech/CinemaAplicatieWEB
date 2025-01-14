@@ -1,33 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using CinemaAplicatieWEB.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using CinemaAplicatieWEB.Data;
-using CinemaAplicatieWEB.Models;
 
 namespace CinemaAplicatieWEB.Pages.Users
 {
     public class CreateModel : PageModel
     {
-        private readonly CinemaAplicatieWEB.Data.CinemaAplicatieWEBContext _context;
+        private readonly CinemaAplicatieWEBContext _context;
 
-        public CreateModel(CinemaAplicatieWEB.Data.CinemaAplicatieWEBContext context)
+        public CreateModel(CinemaAplicatieWEBContext context)
         {
             _context = context;
         }
+
+        [BindProperty]
+        public User User { get; set; }
 
         public IActionResult OnGet()
         {
             return Page();
         }
 
-        [BindProperty]
-        public User User { get; set; } = default!;
-
-        // For more information, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
@@ -35,7 +29,7 @@ namespace CinemaAplicatieWEB.Pages.Users
                 return Page();
             }
 
-            _context.User.Add(User);
+            _context.Users.Add(User);
             await _context.SaveChangesAsync();
 
             return RedirectToPage("./Index");

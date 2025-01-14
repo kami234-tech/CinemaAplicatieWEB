@@ -31,15 +31,15 @@ namespace CinemaAplicatieWEB.Pages
                 return Page();
             }
 
-            // Verifică utilizatorul în baza de date
-            var user = _context.User.FirstOrDefault(u => u.Email == Email && u.Password == Password);
+            // Verify user in the database
+            var user = _context.Users.FirstOrDefault(u => u.Email == Email && u.Password == Password);
             if (user == null)
             {
                 ErrorMessage = "Email sau parolă incorecte.";
                 return Page();
             }
 
-            // Crearea cookie-ului de autentificare
+            // Create authentication claims
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, user.Email),
@@ -49,10 +49,17 @@ namespace CinemaAplicatieWEB.Pages
             var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             var principal = new ClaimsPrincipal(identity);
 
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+            // Sign in the user
+            await HttpContext.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                principal,
+                new AuthenticationProperties
+                {
+                    IsPersistent = true,
+                    ExpiresUtc = DateTime.UtcNow.AddHours(1)
+                });
 
             return RedirectToPage("/Index");
         }
     }
 }
-

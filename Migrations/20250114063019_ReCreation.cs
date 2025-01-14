@@ -5,24 +5,18 @@
 namespace CinemaAplicatieWEB.Migrations
 {
     /// <inheritdoc />
-    public partial class AddGenresToMovies : Migration
+    public partial class ReCreation : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.RenameColumn(
-                name: "Genre",
-                table: "Movie",
-                newName: "Genres");
+
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.RenameColumn(
-                name: "Genres",
-                table: "Movie",
-                newName: "Genre");
+
         }
     }
 }

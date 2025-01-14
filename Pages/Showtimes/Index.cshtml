@@ -2,47 +2,38 @@
 @model CinemaAplicatieWEB.Pages.Showtimes.IndexModel
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Showtimes";
 }
 
-<h1>Index</h1>
+<h1>Showtimes</h1>
+@if (User.IsInRole("admin"))
+{
+    <p>
+        <a asp-page="./Create" class="btn btn-primary">Create New Showtime</a>
+    </p>
+}
 
-<p>
-    <a asp-page="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Showtime[0].DateTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Showtime[0].Movie)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Showtime[0].Hall)
-            </th>
-            <th></th>
+            <th>Movie</th>
+            <th>Hall</th>
+            <th>Date & Time</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Showtime) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Movie.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Hall.Id)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var showtime in Model.Showtimes)
+        {
+            <tr>
+                <td>@showtime.Movie.Title</td>
+                <td>@showtime.Hall.Name</td>
+                <td>@showtime.DateTime?.ToString("dd.MM.yyyy HH:mm")</td>
+                <td>
+                    <a asp-page="./Edit" asp-route-id="@showtime.Id" class="btn btn-warning btn-sm">Edit</a>
+                    <a asp-page="./Delete" asp-route-id="@showtime.Id" class="btn btn-danger btn-sm">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

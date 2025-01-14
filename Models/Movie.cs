@@ -1,16 +1,16 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using CinemaAplicatieWEB.Models;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
-using System.Collections.Generic;
 
-namespace CinemaAplicatieWEB.Models
+public class Movie
 {
-    public class Movie
-    {
-        public int Id { get; set; }
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public int Id { get; set; }
+    public string Title { get; set; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
+    public int Duration { get; set; }
+    public string Genres { get; set; } = string.Empty; // Ensure this is comma-separated for multiple genres
+    public List<Showtime> Showtime { get; set; } = new List<Showtime>(); // Navigation property
 
-        public string Title { get; set; }
-        public string Description { get; set; }
-        public int Duration { get; set; } // In minutes
-        public List<string> Genres { get; set; } = new List<string>(); // Listă de genuri
-    }
 }

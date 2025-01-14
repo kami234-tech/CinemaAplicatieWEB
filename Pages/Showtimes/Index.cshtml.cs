@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using CinemaAplicatieWEB.Data;
@@ -12,20 +9,21 @@ namespace CinemaAplicatieWEB.Pages.Showtimes
 {
     public class IndexModel : PageModel
     {
-        private readonly CinemaAplicatieWEB.Data.CinemaAplicatieWEBContext _context;
+        private readonly CinemaAplicatieWEBContext _context;
 
-        public IndexModel(CinemaAplicatieWEB.Data.CinemaAplicatieWEBContext context)
+        public IndexModel(CinemaAplicatieWEBContext context)
         {
             _context = context;
         }
 
-        public IList<Showtime> Showtime { get;set; } = default!;
+        public IList<Showtime> Showtimes { get; set; }
 
         public async Task OnGetAsync()
         {
-            Showtime = await _context.Showtime
+            Showtimes = await _context.Showtime
+                .Include(s => s.Movie)
                 .Include(s => s.Hall)
-                .Include(s => s.Movie).ToListAsync();
+                .ToListAsync();
         }
     }
 }

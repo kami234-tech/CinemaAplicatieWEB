@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -29,7 +28,8 @@ namespace CinemaAplicatieWEB.Pages.Users
                 return NotFound();
             }
 
-            var user = await _context.User.FirstOrDefaultAsync(m => m.Id == id);
+            // Access the Users DbSet instead of User
+            var user = await _context.Users.FirstOrDefaultAsync(m => m.Id == id);
 
             if (user == null)
             {
@@ -49,11 +49,12 @@ namespace CinemaAplicatieWEB.Pages.Users
                 return NotFound();
             }
 
-            var user = await _context.User.FindAsync(id);
+            // Access the Users DbSet instead of User
+            var user = await _context.Users.FindAsync(id);
             if (user != null)
             {
                 User = user;
-                _context.User.Remove(User);
+                _context.Users.Remove(User);
                 await _context.SaveChangesAsync();
             }
 

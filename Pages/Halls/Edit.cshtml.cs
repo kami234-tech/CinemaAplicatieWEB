@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CinemaAplicatieWEB.Data;
 using CinemaAplicatieWEB.Models;
@@ -13,9 +10,9 @@ namespace CinemaAplicatieWEB.Pages.Halls
 {
     public class EditModel : PageModel
     {
-        private readonly CinemaAplicatieWEB.Data.CinemaAplicatieWEBContext _context;
+        private readonly CinemaAplicatieWEBContext _context;
 
-        public EditModel(CinemaAplicatieWEB.Data.CinemaAplicatieWEBContext context)
+        public EditModel(CinemaAplicatieWEBContext context)
         {
             _context = context;
         }
@@ -30,17 +27,18 @@ namespace CinemaAplicatieWEB.Pages.Halls
                 return NotFound();
             }
 
-            var hall =  await _context.Hall.FirstOrDefaultAsync(m => m.Id == id);
-            if (hall == null)
+            // Retrieve the hall to edit
+            Hall = await _context.Halls.FirstOrDefaultAsync(h => h.Id == id);
+
+            if (Hall == null)
             {
                 return NotFound();
             }
-            Hall = hall;
+
             return Page();
         }
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more information, see https://aka.ms/RazorPagesCRUD.
+
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
@@ -56,7 +54,7 @@ namespace CinemaAplicatieWEB.Pages.Halls
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!HallExists(Hall.Id))
+                if (!_context.Halls.Any(h => h.Id == Hall.Id))
                 {
                     return NotFound();
                 }
@@ -67,11 +65,6 @@ namespace CinemaAplicatieWEB.Pages.Halls
             }
 
             return RedirectToPage("./Index");
-        }
-
-        private bool HallExists(int id)
-        {
-            return _context.Hall.Any(e => e.Id == id);
         }
     }
 }

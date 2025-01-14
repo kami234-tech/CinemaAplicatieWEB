@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -12,9 +9,9 @@ namespace CinemaAplicatieWEB.Pages.Movies
 {
     public class DeleteModel : PageModel
     {
-        private readonly CinemaAplicatieWEB.Data.CinemaAplicatieWEBContext _context;
+        private readonly CinemaAplicatieWEBContext _context;
 
-        public DeleteModel(CinemaAplicatieWEB.Data.CinemaAplicatieWEBContext context)
+        public DeleteModel(CinemaAplicatieWEBContext context)
         {
             _context = context;
         }
@@ -29,16 +26,13 @@ namespace CinemaAplicatieWEB.Pages.Movies
                 return NotFound();
             }
 
-            var movie = await _context.Movie.FirstOrDefaultAsync(m => m.Id == id);
+            Movie = await _context.Movies.FirstOrDefaultAsync(m => m.Id == id);
 
-            if (movie == null)
+            if (Movie == null)
             {
                 return NotFound();
             }
-            else
-            {
-                Movie = movie;
-            }
+
             return Page();
         }
 
@@ -49,11 +43,10 @@ namespace CinemaAplicatieWEB.Pages.Movies
                 return NotFound();
             }
 
-            var movie = await _context.Movie.FindAsync(id);
+            var movie = await _context.Movies.FindAsync(id);
             if (movie != null)
             {
-                Movie = movie;
-                _context.Movie.Remove(Movie);
+                _context.Movies.Remove(movie);
                 await _context.SaveChangesAsync();
             }
 

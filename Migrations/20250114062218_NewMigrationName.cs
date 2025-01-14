@@ -6,40 +6,44 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace CinemaAplicatieWEB.Migrations
 {
     /// <inheritdoc />
-    public partial class CreateReservation : Migration
+    public partial class NewMigrationName : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Showtime",
+                name: "Halls",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    MovieId = table.Column<int>(type: "int", nullable: false),
-                    DateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    HallId = table.Column<int>(type: "int", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Layout = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Capacity = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Showtime", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Showtime_Hall_HallId",
-                        column: x => x.HallId,
-                        principalTable: "Hall",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Showtime_Movie_MovieId",
-                        column: x => x.MovieId,
-                        principalTable: "Movie",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                    table.PrimaryKey("PK_Halls", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "User",
+                name: "Movies",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Duration = table.Column<int>(type: "int", nullable: false),
+                    Genres = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Movies", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Users",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -51,7 +55,35 @@ namespace CinemaAplicatieWEB.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_User", x => x.Id);
+                    table.PrimaryKey("PK_Users", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Showtime",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    MovieId = table.Column<int>(type: "int", nullable: false),
+                    Time = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    HallId = table.Column<int>(type: "int", nullable: false),
+                    DateTime = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Showtime", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Showtime_Halls_HallId",
+                        column: x => x.HallId,
+                        principalTable: "Halls",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Showtime_Movies_MovieId",
+                        column: x => x.MovieId,
+                        principalTable: "Movies",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -75,9 +107,9 @@ namespace CinemaAplicatieWEB.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Reservation_User_UserId",
+                        name: "FK_Reservation_Users_UserId",
                         column: x => x.UserId,
-                        principalTable: "User",
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -113,7 +145,13 @@ namespace CinemaAplicatieWEB.Migrations
                 name: "Showtime");
 
             migrationBuilder.DropTable(
-                name: "User");
+                name: "Users");
+
+            migrationBuilder.DropTable(
+                name: "Halls");
+
+            migrationBuilder.DropTable(
+                name: "Movies");
         }
     }
 }

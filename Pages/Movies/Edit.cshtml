@@ -2,57 +2,52 @@
 @model CinemaAplicatieWEB.Pages.Movies.EditModel
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit Movie";
 }
 
-<h1>Edit</h1>
+<h1>Edit Movie</h1>
 
-<h4>Movie</h4>
-<hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-6">
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <!-- Hidden ID Field -->
             <input type="hidden" asp-for="Movie.Id" />
+
+            <!-- Title -->
             <div class="form-group">
                 <label asp-for="Movie.Title" class="control-label"></label>
                 <input asp-for="Movie.Title" class="form-control" />
                 <span asp-validation-for="Movie.Title" class="text-danger"></span>
             </div>
+
+            <!-- Description -->
             <div class="form-group">
                 <label asp-for="Movie.Description" class="control-label"></label>
-                <input asp-for="Movie.Description" class="form-control" />
+                <textarea asp-for="Movie.Description" class="form-control"></textarea>
                 <span asp-validation-for="Movie.Description" class="text-danger"></span>
             </div>
+
+            <!-- Duration -->
             <div class="form-group">
                 <label asp-for="Movie.Duration" class="control-label"></label>
-                <input asp-for="Movie.Duration" class="form-control" />
+                <input asp-for="Movie.Duration" class="form-control" type="number" min="1" />
                 <span asp-validation-for="Movie.Duration" class="text-danger"></span>
             </div>
+
+            <!-- Genres -->
             <div class="form-group">
-                <label>Select Genres:</label>
-                <div>
-                    <input type="checkbox" name="Genres" value="Action" @(Model.Movie.Genres.Contains("Action") ? "checked" : "") /> Action<br />
-                    <input type="checkbox" name="Genres" value="Drama" @(Model.Movie.Genres.Contains("Drama") ? "checked" : "") /> Drama<br />
-                    <input type="checkbox" name="Genres" value="Comedy" @(Model.Movie.Genres.Contains("Comedy") ? "checked" : "") /> Comedy<br />
-                    <input type="checkbox" name="Genres" value="Thriller" @(Model.Movie.Genres.Contains("Thriller") ? "checked" : "") /> Thriller<br />
-                    <input type="checkbox" name="Genres" value="Fantasy" @(Model.Movie.Genres.Contains("Fantasy") ? "checked" : "") /> Fantasy<br />
-                    <input type="checkbox" name="Genres" value="Animation" @(Model.Movie.Genres.Contains("Animation") ? "checked" : "") /> Animation<br />
-                </div>
+                <label asp-for="Movie.Genres" class="control-label"></label>
+                <input asp-for="Movie.Genres" class="form-control" />
+                <span asp-validation-for="Movie.Genres" class="text-danger"></span>
             </div>
+
+            <!-- Submit Button -->
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <button type="submit" class="btn btn-primary">Save</button>
+                <a asp-page="./Index" class="btn btn-secondary">Cancel</a>
             </div>
         </form>
     </div>
 </div>
-
-<div>
-    <a asp-page="./Index">Back to List</a>
-</div>
-
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-}

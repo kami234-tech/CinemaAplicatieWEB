@@ -1,42 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using CinemaAplicatieWEB.Data;
 using CinemaAplicatieWEB.Models;
+using CinemaAplicatieWEB.Data;
 
 namespace CinemaAplicatieWEB.Pages.Showtimes
 {
     public class DetailsModel : PageModel
     {
-        private readonly CinemaAplicatieWEB.Data.CinemaAplicatieWEBContext _context;
+        private readonly CinemaAplicatieWEBContext _context;
 
-        public DetailsModel(CinemaAplicatieWEB.Data.CinemaAplicatieWEBContext context)
+        public DetailsModel(CinemaAplicatieWEBContext context)
         {
             _context = context;
         }
 
-        public Showtime Showtime { get; set; } = default!;
+        public Showtime Showtime { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public async Task<IActionResult> OnGetAsync(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            Showtime = await _context.Showtime.Include(s => s.Movie).Include(s => s.Hall).FirstOrDefaultAsync(m => m.Id == id);
 
-            var showtime = await _context.Showtime.FirstOrDefaultAsync(m => m.Id == id);
-            if (showtime == null)
-            {
+            if (Showtime == null)
                 return NotFound();
-            }
-            else
-            {
-                Showtime = showtime;
-            }
+
             return Page();
         }
     }

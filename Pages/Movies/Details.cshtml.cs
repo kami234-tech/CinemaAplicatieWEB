@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
 using CinemaAplicatieWEB.Data;
 using CinemaAplicatieWEB.Models;
 
@@ -12,9 +8,9 @@ namespace CinemaAplicatieWEB.Pages.Movies
 {
     public class DetailsModel : PageModel
     {
-        private readonly CinemaAplicatieWEB.Data.CinemaAplicatieWEBContext _context;
+        private readonly CinemaAplicatieWEBContext _context;
 
-        public DetailsModel(CinemaAplicatieWEB.Data.CinemaAplicatieWEBContext context)
+        public DetailsModel(CinemaAplicatieWEBContext context)
         {
             _context = context;
         }
@@ -28,15 +24,13 @@ namespace CinemaAplicatieWEB.Pages.Movies
                 return NotFound();
             }
 
-            var movie = await _context.Movie.FirstOrDefaultAsync(m => m.Id == id);
-            if (movie == null)
+            Movie = await _context.Movies.FindAsync(id);
+
+            if (Movie == null)
             {
                 return NotFound();
             }
-            else
-            {
-                Movie = movie;
-            }
+
             return Page();
         }
     }

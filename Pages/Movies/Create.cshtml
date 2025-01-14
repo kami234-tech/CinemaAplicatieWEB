@@ -1,11 +1,10 @@
 ﻿@page
 @model CinemaAplicatieWEB.Pages.Movies.CreateModel
-
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Create Movie";
 }
 
-<h1>Create</h1>
+<h1>Create Movie</h1>
 
 <h4>Movie</h4>
 <hr />
@@ -13,32 +12,35 @@
     <div class="col-md-4">
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <!-- Movie Title Input -->
             <div class="form-group">
                 <label asp-for="Movie.Title" class="control-label"></label>
                 <input asp-for="Movie.Title" class="form-control" />
                 <span asp-validation-for="Movie.Title" class="text-danger"></span>
             </div>
+
+            <!-- Movie Description Input -->
             <div class="form-group">
                 <label asp-for="Movie.Description" class="control-label"></label>
-                <input asp-for="Movie.Description" class="form-control" />
+                <textarea asp-for="Movie.Description" class="form-control"></textarea>
                 <span asp-validation-for="Movie.Description" class="text-danger"></span>
             </div>
+
+            <!-- Movie Duration Input -->
             <div class="form-group">
                 <label asp-for="Movie.Duration" class="control-label"></label>
-                <input asp-for="Movie.Duration" class="form-control" />
+                <input asp-for="Movie.Duration" class="form-control" type="number" min="1" />
                 <span asp-validation-for="Movie.Duration" class="text-danger"></span>
             </div>
+
+            <!-- Genres Input -->
             <div class="form-group">
-                <label>Select Genres:</label>
-                <div>
-                    <input type="checkbox" name="Genres" value="Action" /> Action<br />
-                    <input type="checkbox" name="Genres" value="Drama" /> Drama<br />
-                    <input type="checkbox" name="Genres" value="Comedy" /> Comedy<br />
-                    <input type="checkbox" name="Genres" value="Thriller" /> Thriller<br />
-                    <input type="checkbox" name="Genres" value="Fantasy" /> Fantasy<br />
-                    <input type="checkbox" name="Genres" value="Fantasy" /> Animation<br />
-                </div>
+                <label asp-for="Movie.Genres" class="control-label"></label>
+                <input asp-for="Movie.Genres" class="form-control" placeholder="Enter genres separated by commas" />
+                <span asp-validation-for="Movie.Genres" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
@@ -49,9 +51,3 @@
 <div>
     <a asp-page="Index">Back to List</a>
 </div>
-
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-}

@@ -8,11 +8,14 @@ namespace CinemaAplicatieWEB.Pages
     public class RegisterModel : PageModel
     {
         private readonly CinemaAplicatieWEBContext _context;
+
         public RegisterModel(CinemaAplicatieWEBContext context)
         {
             _context = context;
         }
 
+        [BindProperty]
+        public string Name { get; set; }
         [BindProperty]
         public string Email { get; set; }
         [BindProperty]
@@ -25,39 +28,40 @@ namespace CinemaAplicatieWEB.Pages
 
         public async Task<IActionResult> OnPostAsync()
         {
-            if (string.IsNullOrEmpty(Email) || string.IsNullOrEmpty(Password) || string.IsNullOrEmpty(Role))
+            // Validate required fields
+            if (string.IsNullOrEmpty(Name) || string.IsNullOrEmpty(Email) || string.IsNullOrEmpty(Password) || string.IsNullOrEmpty(Role))
             {
-                ErrorMessage = "Toate câmpurile sunt obligatorii.";
+                ErrorMessage = "All fields are required.";
                 return Page();
             }
 
-            // Validare pentru parola secretă dacă rolul este Admin
+            // Validate secret password if role is "admin"
             if (Role == "admin" && SecretPassword != "CinemaCity")
             {
-                ErrorMessage = "Parola secretă pentru Admin este incorectă.";
+                ErrorMessage = "The secret password for Admin is incorrect.";
                 return Page();
             }
 
-            // Verifică dacă utilizatorul există deja
-            var existingUser = _context.User.FirstOrDefault(u => u.Email == Email);
+            // Check if a user with the same email already exists
+            var existingUser = _context.Users.FirstOrDefault(u => u.Email == Email); // Change `User` to `Users`
             if (existingUser != null)
             {
-                ErrorMessage = "Un utilizator cu acest email există deja.";
+                ErrorMessage = "A user with this email already exists.";
                 return Page();
             }
 
-            // Adaugă utilizatorul în baza de date
+            // Add the new user to the database
             var newUser = new User
             {
+                Name = Name,
                 Email = Email,
-                Password = Password, // Parola poate fi criptată aici
+                Password = Password, // Consider encrypting the password
                 Role = Role
             };
-            _context.User.Add(newUser);
+            _context.Users.Add(newUser); // Change `User` to `Users`
             await _context.SaveChangesAsync();
 
             return RedirectToPage("/Login");
         }
     }
 }
-
